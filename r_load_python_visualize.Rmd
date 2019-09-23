@@ -1,0 +1,41 @@
+
+Let's prepare the data with R:
+
+```{r data_load}
+library(reticulate)
+data = read.csv("15m.csv",stringsAsFactors = FALSE) 
+colnames(data)[1]<- "datetime"
+
+head(data)
+```
+
+Now let's work with Python pandas data frame inside R :
+
+```{python}
+import matplotlib.dates as mdates
+py_data_frame = r.data
+
+
+py_data_frame['Date']=py_data_frame['datetime'].map(mdates.datestr2num)
+
+
+py_data_frame[['Date','Open', 'High', 'Low', 'Close']].head()
+```
+
+Basic candlestick graph created with Python engine:
+
+```{python,warning=FALSE}
+import pandas as pd
+import matplotlib.pyplot as plt
+import datetime
+from mpl_finance import candlestick_ohlc
+import matplotlib.dates as mdates
+
+ax = plt.subplot()
+
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
+plt.show(candlestick_ohlc(ax, py_data_frame[['Date','Open', 'High', 'Low', 'Close']].values, 
+width=0.006,colorup='g', colordown='r'))
+
+```
+

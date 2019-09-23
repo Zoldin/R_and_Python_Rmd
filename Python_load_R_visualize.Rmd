@@ -1,0 +1,33 @@
+
+Let's prepare the data with Python:
+
+```{python data_load}
+import pandas as pd
+data = pd.read_csv("15m.csv") 
+
+data.rename(columns={"Unnamed: 0": "datetime"},inplace=True)
+    
+data.head()
+```
+
+Now let's work with Python pandas data frame inside R :
+
+```{r check_python_data,include=FALSE}
+library(reticulate)
+library(plotly)
+r_data_frame <- py$data
+
+head(r_data_frame)
+```
+
+
+Basic candlestick graph created with R engine:
+
+
+```{r visualize_python_data}
+r_data_frame %>%
+  plot_ly(x = ~datetime, type="candlestick",
+          open = ~Open, close = ~Close,
+          high = ~High, low = ~Low) 
+
+```
